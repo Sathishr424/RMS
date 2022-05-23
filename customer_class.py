@@ -75,7 +75,7 @@ class Customer:
     def update_value(self, price):
         self.set_value(self.get_value() + self.get_discount(price)[1])
 
-    def get_value(self): return self.value
+    def get_value(self): return round(self.value, 2)
 
     def set_value(self, value): self.value = value
 
