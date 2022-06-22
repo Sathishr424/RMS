@@ -1,0 +1,8 @@
+James, oven, 1, 01/09/2021 10:10:00
+Lily, shirt, 2, towel, 5, 05/09/2021 14:00:00
+Tom, pant, 1, shirt, 2, workwear, 1, 12/10/2021 09:05:00
+Harry, kettle, 3, 20/12/2021 15:20:00
+Tom, microwave, 1, kettle, 1, 04/01/2022 09:10:00
+Sarah, workwear, 2, 25/01/2022 20:00:00
+sat, workwear, 5, oven, 5, towel, 2, 2022/05/24 03:14:58
+sat, kettle, 12, 2022/05/24 03:21:21

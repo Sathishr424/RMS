@@ -4,7 +4,7 @@ from records_class import Records
 # MAIN_PATH = os.path.join(os.getcwd(), "data_files", "files_HDlevel")
 MAIN_PATH = os.getcwd()
 # print(MAIN_PATH)
-class Main:
+class Operations:
     def __init__(self, customers_path=os.path.join(MAIN_PATH, "customers.txt"), products_path=os.path.join(MAIN_PATH, "products.txt"), orders_path=os.path.join(MAIN_PATH, "orders.txt")):
         self.records = Records(customers_path, products_path, orders_path)
         # self.records.list_customers()
@@ -47,11 +47,11 @@ class Main:
         else:
             return inp
     
-    def askFloat(self, ques, msg):
+    def askFloat(self, ques, msg, limit=0):
         inp = input(ques)
         if inp.replace('.','').isdigit():
             inp = float(inp)
-            if inp < 0:
+            if inp < limit:
                 print(msg)
                 return self.askFloat(ques, msg)
             else:
@@ -65,13 +65,13 @@ class Main:
         if customer == None or customer.get_ID()[0] != 'V':
             print("Invalid customer!")
         else:
-            dr = self.askFloat("Please enter the new discount rate for this VIP customer:\n", "Please enter only Non-Negative number and larger than 0..\n")
+            dr = self.askFloat("Please enter the new discount rate for this VIP customer:\n", "Please enter only Non-Negative number..\n")
             customer.set_rate(dr)
             print("Discount rate changed successfully for this VIP member..\n")
             input("Please enter to continue...")
         
     def adjustThresholdLimit(self):
-        tl = self.askFloat("Please enter the new threshold limit for all the VIP Members:\n", "Please enter only Non-Negative number and larger than 0..\n")
+        tl = self.askFloat("Please enter the new threshold limit for all the VIP Members:\n", "Please enter only Non-Negative number and larger than 0..\n", 1)
         self.records.changeDefaultThresholdLimit(tl)
         print("Threshold limit was changed successfully..\n")
         input("Please enter to continue...")
@@ -136,10 +136,14 @@ class Main:
         while product == None:
             print("\nProduct not found! Please enter the product that was in the stock.\n")
             product = self.records.find_product(self.ask("\nEnter the product [enter a valid product only, e.g. shirt, towel, oven, kettle]:\n", False, ""))
-        qty = self.ask("\nEnter the product quantity [enter a positive integer only, e.g. 1, 2, 3]:\n", True, "Please enter a number larger that 0.", 1)
-        if len(str(product.get_price())) < 0 or float(product.get_price()) < 0:
-            print("This products price are not set properly..\n")
-            return -1, -1
+        if len(str(product.get_price())) <= 0 or float(product.get_price()) <= 0:
+            print("Can't order this product. This product price is not valid..\n")
+            ques = self.ask_options("\nDoes the customer wants to order more products? [e.g Y or N]:\n", ['Y', 'N'], '\nPlease enter only Y[yes] or N[no].')
+            if ques == 'Y':
+                return self.order_products(name, products, qtys)
+            elif ques == 'N':
+                return products, qtys
+        qty = self.ask("\nEnter the product quantity [enter a positive integer only, e.g. 1, 2, 3]:\n", True, "Please enter a number larger than 0.", 1)
         if not product.check_stock(qty):
             while not product.check_stock(qty):
                 print("\nProduct was not in stock for the mentioned quantity! Please enter the quantity of the product that was in the stock.\n")
@@ -158,14 +162,14 @@ class Main:
             print("\nCustomer name must not contain numbers..")
             name = self.ask("\nEnter the name of the customer [e.g. Huong]:\n", False, "")
         products, qtys = self.order_products(name, [], [])
-        if qtys == -1:
+        if qtys == -1 or len(products) <= 0:
             return
         self.records.add_order(name, products, qtys)
         input("Please enter to continue...")
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        Main()
+        Operations()
     elif len(sys.argv) > 4 or len(sys.argv) < 3:
         print("Please only pass the 'customers.txt', 'products.txt' and if have also pass 'orders.txt' as the argument to run this program")
     else:
@@ -175,4 +179,4 @@ if __name__ == '__main__':
             arg3 = sys.argv[3]
         except:
             arg3 = ""
-        Main(arg1, arg2, arg3)
+        Operations(arg1, arg2, arg3)

@@ -62,6 +62,10 @@ class Customer:
             pass
         else:
             self.member.set_threshold(threshold)
+    
+    def get_threshold(self):
+        if self.get_ID()[0] == 'V': return self.member.get_threshold()
+        return '-'
 
     def get_discount(self, price):
         if self.member == None:
@@ -72,10 +76,10 @@ class Customer:
     def get_discount_rate(self): 
         return self.get_discount(0)[0]
 
-    def update_value(self, price):
-        self.set_value(self.get_value() + self.get_discount(price)[1])
+    def update_value(self, price, VIPMembershipCharge=0):
+        self.set_value(self.get_value() + self.get_discount(price)[1] + VIPMembershipCharge)
 
-    def get_value(self): return round(self.value, 2)
+    def get_value(self): return round(self.value, 3)
 
     def set_value(self, value): self.value = value
 
